@@ -1,0 +1,31 @@
+﻿@using IOT_LED.Models;
+@using IOT_LED.Services;
+@using Microsoft.AspNetCore.Components.Web
+@inject JSONFileDataService DataService
+
+
+<input type="checkbox" id="switch" @bind="check" @onclick="ChangeState" />
+<label for="switch">
+    Toggle
+</label>
+
+@code {
+    public bool check { get; set; }
+
+    void ChangeState()
+    {
+        check = !check;
+        DataService.SetButton(check.ToString().ToLower());
+    }
+
+    void Startup()
+    {
+        check = DataService.GetData().Button == "true";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Startup();
+        await Task.CompletedTask;
+    }
+}
