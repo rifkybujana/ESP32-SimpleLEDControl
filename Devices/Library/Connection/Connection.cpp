@@ -70,48 +70,6 @@ String Connection::Get(String path)
     return ERROR_GET_DATA;
 }
 
-String Connection::Post(String path)
-{
-    if (WiFiMulti.run() == WL_CONNECTED)
-    {
-        WiFiClient client;
-        HTTPClient http;
-
-        Serial.print("[HTTP] begin...\n");
-
-        if (http.begin(client, url + path)) 
-        {
-            http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-            
-            Serial.print("[HTTP] POST...\n");
-            int httpCode = http.POST();
-
-            if (httpCode > 0)
-            {
-                Serial.printf("[HTTP] POST... code: %d\n", httpCode);
-
-                if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY)
-                {
-                    String payload = http.getString();
-                    return payload;
-                }
-            } 
-            else 
-            {
-                Serial.printf("%s, error: %s\n", ERROR_POST_DATA, http.errorToString(httpCode).c_str());
-            }
-
-            http.end();
-        } 
-        else 
-        {
-            Serial.printf(ERROR_CONNECTION);
-        }
-    }
-    
-    return ERROR_POST_DATA;
-}
-
 String Connection::Post(String path, String key, String value)
 {
     if (WiFiMulti.run() == WL_CONNECTED)
@@ -121,7 +79,7 @@ String Connection::Post(String path, String key, String value)
 
         Serial.print("[HTTP] begin...\n");
 
-        if (http.begin(client, url + path)) 
+        if (http.begin(client, _url + path)) 
         {
             http.addHeader("Content-Type", "application/x-www-form-urlencoded");
             
@@ -163,7 +121,7 @@ String Connection::Post(String path, String* key, String* value, int length)
 
         Serial.print("[HTTP] begin...\n");
 
-        if (http.begin(client, url + path)) 
+        if (http.begin(client, _url + path)) 
         {
             http.addHeader("Content-Type", "application/x-www-form-urlencoded");
             
